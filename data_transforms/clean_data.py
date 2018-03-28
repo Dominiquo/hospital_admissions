@@ -28,10 +28,8 @@ def filter_uknown_exit_cond(all_df, cond_egr=constants.COND_EGR):
 
 
 def remove_uknown_insurer(df, insurer_col=constants.INSUR_NEW):
-	'''
-
-	'''
+	print('removing rows with insurer not private or public...')
 	if constants.INSUR_NEW not in df.columns:
-		print('need to add new insurrer type column before filtering!')
+		print('need to add new insurer type column before filtering!')
 		return df
 	return df[df[insurer_col].notnull()]

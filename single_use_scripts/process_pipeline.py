@@ -8,10 +8,12 @@ from single_use_scripts import extract_region_map
 def clean_pipeline(df):
 	clean_df = clean_data.filter_for_years(df)
 	clean_df = clean_data.filter_unknown_gender(clean_df)
+	clean_df = clean_data.filter_uknown_exit_cond(clean_df)
 	return clean_df
 
 def update_pipeline(df):
 	df = update_data.add_insure_col(df)
+	df = clean_data.remove_uknown_insurer(df)
 	df = update_data.update_region_mappings(df)
 	return df
 

@@ -5,12 +5,13 @@ from single_use_scripts import extract_region_map
 
 
 def add_insure_col(all_df, insur_col=constants.INSUR_NEW, previ_col=constants.PREVI, year_col=constants.YEAR): 
-	print('adding column %s to indicate insurance type. This may take a bit' % insur_col)
+	print('adding column %s to indicate insurance type. This may take a bit.' % insur_col)
 	all_df[insur_col] = all_df.apply(lambda row: map_insure_val(row[previ_col], row[year_col]), axis=1)
 	return all_df
 
 
 def map_insure_val(previ_code, year):
+	if pd.isnull(previ_code): return np.nan
 	if year < 2007:
 		insurance_type = constants.MAP_PRE_2007[previ_code]
 	elif year >= 2007:
