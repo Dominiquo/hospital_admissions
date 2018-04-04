@@ -33,3 +33,10 @@ def remove_uknown_insurer(df, insurer_col=constants.INSUR_NEW):
 		print('need to add new insurer type column before filtering!')
 		return df
 	return df[df[insurer_col].notnull()]
+
+
+def remove_non_indicator_cols(df, remove_cols=constants.ALL_TEMP_COLS):
+	print('removing temporary columns that were used in build process...')
+	for col in remove_cols:
+		del df[col]
+	return df

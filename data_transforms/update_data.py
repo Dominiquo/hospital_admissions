@@ -4,10 +4,26 @@ from utils import constants
 from single_use_scripts import extract_region_map
 
 
-def add_insure_col(all_df, insur_col=constants.INSUR_NEW, previ_col=constants.PREVI, year_col=constants.YEAR): 
+def add_insure_col(dataframe, insur_col=constants.INSUR_NEW, previ_col=constants.PREVI, year_col=constants.YEAR): 
 	print('adding column %s to indicate insurance type. This may take a bit.' % insur_col)
-	all_df[insur_col] = all_df.apply(lambda row: map_insure_val(row[previ_col], row[year_col]), axis=1)
-	return all_df
+	dataframe[insur_col] = dataframe.apply(lambda row: map_insure_val(row[previ_col], row[year_col]), axis=1)
+	return dataframe
+
+
+def add_private_insur_indicator(dataframe, private_insure=constants.PRIVATE_INSURE, all_insure_col=constants.INSUR_NEW):
+	print('adding column for binary indication of whether a patient had private insurance...')
+	dataframe[private_insure] = dataframe[all_insure_col].apply(lambda v: 1 if v == constants.PRIVATE else 0)
+	return dataframe
+
+def add_female_indicator(dataframe, sex_col=constants.SEX, female_col=constants.FEMALE_COL):
+	print('adding column for binary indication of whether a patient was female...')
+	dataframe[female_col] = dataframe[sex_col].apply(lambda v: 1 if v == constants.FEMALE else 0)
+	return dataframe
+
+def add_death_indicator(dataframe, cond_egr=constants.COND_EGR, dead_col=constants.DEAD_COL):
+	print('adding column for binary indication of whether a patient died in hospital...')
+	dataframe[dead_col] = dataframe[cond_egr].apply(lambda v: 1 if v == constants.DEAD else 0)
+	return dataframe
 
 
 def map_insure_val(previ_code, year):
@@ -19,17 +35,17 @@ def map_insure_val(previ_code, year):
 	return insurance_type
 
 
-def update_region_mappings(df, reg_col=constants.REGION):
+def update_region_mappings(dataframe, reg_col=constants.REGION):
 	region_map = extract_region_map.get_region_mapping()
-	original_size = len(df)
-	df = df[df[reg_col].isin(region_map.keys())]
-	new_size = len(df)
+	original_size = len(dataframe)
+	dataframe = dataframe[dataframe[reg_col].isin(region_map.keys())]
+	new_size = len(dataframe)
 	# Turn off uneccessary warning that might scare someone running code. 
 	# Doesn't apply to this use case
 	pd.options.mode.chained_assignment = None 
 	print('removing %d rows that have unlisted regions' % (original_size - new_size))
 	print('Mapping region values back to pre 2007 listing...')
-	df.loc[:,[reg_col]] = df[reg_col].copy().apply(lambda v: region_map[v])
-	return df
+	dataframe.loc[:,[reg_col]] = dataframe[reg_col].copy().apply(lambda v: region_map[v])
+	return dataframe
 
 
