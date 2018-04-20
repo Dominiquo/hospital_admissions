@@ -9,6 +9,10 @@ PRIVATE_INSURE = 'PRIVATE_INSUR'
 REGION = 'REGION'
 FEMALE_COL = 'FEMALE'
 DEAD_COL = 'DEAD'
+SER_SALUD = 'SER_SALUD'
+COMUNA = 'COMUNA'
+ESTAB = 'ESTAB'
+
 
 
 # TEMPORARY COLUMNS
@@ -44,5 +48,7 @@ MAP_2007_ON = {0.0: np.nan, 1.0: 'pb', 2.0: 'pv', 3.0: np.nan, 4.0: np.nan, 5.0:
 REGION_XLS = '../data/DPA2016.xls'
 REG_COD_2000 = 'Unnamed: 10'
 REG_COD_2008 = 'Unnamed: 12'
+
+
 
 

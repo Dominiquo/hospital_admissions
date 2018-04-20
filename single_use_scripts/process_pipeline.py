@@ -23,6 +23,8 @@ def update_pipeline(df):
 	df = update_data.add_death_indicator(df)
 	df = update_data.update_region_mappings(df)
 	df = clean_data.remove_non_indicator_cols(df)
+	df = update_data.update_ser_salud(df)
+	df = update_data.update_estab(df)
 	return df
 
 

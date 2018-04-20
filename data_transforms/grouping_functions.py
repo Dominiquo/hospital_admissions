@@ -17,6 +17,10 @@ def alive(all_vals):
 def count_total(all_vals):
 	return len(all_vals)
 
+def add_std():
+	# TODO
+	return None
+
 
 def get_aggregate_func_dict():
 	print('loading function dictionary to apply to groupings..')
