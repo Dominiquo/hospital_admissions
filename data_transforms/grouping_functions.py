@@ -17,14 +17,10 @@ def alive(all_vals):
 def count_total(all_vals):
 	return len(all_vals)
 
-def add_std():
-	# TODO
-	return None
-
 
 def get_aggregate_func_dict():
 	print('loading function dictionary to apply to groupings..')
-	func_dict = {constants.FEMALE_COL: [count_total, positive_indicator, np.mean],
-	            constants.PRIVATE_INSURE: [positive_indicator, np.mean],
-	            constants.DEAD_COL: [positive_indicator, np.mean]}
+	func_dict = {constants.FEMALE_COL: [count_total, positive_indicator, np.mean, np.std],
+	            constants.PRIVATE_INSURE: [positive_indicator, np.mean, np.std],
+	            constants.DEAD_COL: [positive_indicator, np.mean, np.std]}
 	return func_dict

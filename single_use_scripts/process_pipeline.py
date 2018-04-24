@@ -8,23 +8,25 @@ from single_use_scripts import extract_region_map
 
 
 def clean_pipeline(df):
-	clean_df = clean_data.filter_for_years(df)
-	clean_df = clean_data.filter_unknown_gender(clean_df)
-	clean_df = clean_data.filter_uknown_exit_cond(clean_df)
+	clean_df = (df.pipe(clean_data.filter_for_years)
+					.pipe(clean_data.filter_unknown_gender)
+					.pipe(clean_data.filter_uknown_exit_cond))
 	return clean_df
 
 
 def update_pipeline(df):
 	pd.options.mode.chained_assignment = None
-	df = update_data.add_insure_col(df)
-	df = clean_data.remove_uknown_insurer(df)
-	df = update_data.add_private_insur_indicator(df)
-	df = update_data.add_female_indicator(df)
-	df = update_data.add_death_indicator(df)
-	df = update_data.update_region_mappings(df)
-	df = clean_data.remove_non_indicator_cols(df)
-	df = update_data.update_ser_salud(df)
-	df = update_data.update_estab(df)
+	df = (df.pipe(update_data.add_insure_col)
+			.pipe(clean_data.remove_uknown_insurer)
+			.pipe(update_data.add_private_insur_indicator)
+			.pipe(update_data.add_female_indicator)
+			.pipe(update_data.add_death_indicator)
+			.pipe(update_data.update_region_mappings)
+			.pipe(clean_data.remove_non_indicator_cols)
+			.pipe(update_data.update_ser_salud)
+			.pipe(update_data.update_estab)
+			.pipe(update_data.add_weekend_holiday_indicator)
+			.pipe(update_data.add_age_grouping))
 	return df
 
 

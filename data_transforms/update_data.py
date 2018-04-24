@@ -1,6 +1,7 @@
 import pandas as pd 
 import numpy as np 
 from utils import constants
+from datetime import datetime
 from single_use_scripts import extract_region_map
 
 
@@ -30,8 +31,10 @@ def add_death_indicator(dataframe, cond_egr=constants.COND_EGR, dead_col=constan
 
 def map_insure_val(previ_code, year):
 	if pd.isnull(previ_code): return np.nan
-	if year < 2007:
-		insurance_type = constants.MAP_PRE_2007[previ_code]
+	if year < 2003:
+		insurance_type = constants.MAP_2001_2[previ_code]
+	elif year < 2007: 
+		insurance_type = constants.MAP_2003_2007[previ_code]
 	elif year >= 2007:
 		insurance_type = constants.MAP_2007_ON[previ_code]
 	return insurance_type
@@ -88,4 +91,55 @@ def add_estab_final(estab, year, ser_salud):
     else:
         cod_estab = str(int(ser_salud)) + str(estab_final)
     return int(cod_estab)
+
+
+def add_weekend_holiday_indicator(dataframe):
+	FRIDAY = 4
+	TMP_DT_OBJ = 'DT_TEMP'
+	initial_len = len(dataframe)
+	is_weekend = lambda d: int(d.weekday() > FRIDAY)
+	is_holiday = lambda dt_obj: int((dt_obj.month, dt_obj.day) in constants.HOLIDAYS_LIST)
+
+	dataframe[TMP_DT_OBJ] = dataframe[constants.FECHA_EGR].apply(to_datetime)
+	dateframe = dataframe[dataframe[TMP_DT_OBJ].notnull()]
+	print('Dropped %d rows that had a malformed time string...' % (initial_len - len(dataframe)))
+
+	print('adding weekend indicator variable...')
+	dataframe[constants.WEEKEND] = dataframe[TMP_DT_OBJ].apply(is_weekend)
+	print('adding holiday indicator variable...')
+	dataframe[constants.HOLIDAY] = dataframe[TMP_DT_OBJ].apply(is_holiday)
+	dataframe.drop(TMP_DT_OBJ, axis=1, inplace=True)
+	return dataframe
+
+
+def add_age_grouping(dataframe):
+	print('adding age groups to data...')
+	dataframe[constants.AGE_GROUP] = dataframe[constants.EDAD].apply(age_translation)
+	return dataframe
+
+
+def age_translation(age):
+	if (16 < age <= 39):
+		return 0
+	elif (40 < age <= 49):
+		return 1
+	elif (50 < age <= 59):
+		return 2
+	elif (61 < age <= 69):
+		return 3
+	elif (70 < age <= 79):
+		return 4
+	elif (80 < age):
+		return 5
+	return -1
+
+
+def to_datetime(dt_string):
+    try:
+        return pd.to_datetime(dt_str)
+    except:
+        return np.nan
+
+
+
 
